@@ -41,15 +41,19 @@ const DEFAULT_CODE = `
 
 export type EditorProps = {
     sharable?: boolean;
+    language?: string;
+    code?: string;
 };
 
 export const Editor = (props: EditorProps) => {
     const router = useRouter();
     const monaco = useMonaco();
 
-    const [language, setLanguage] = useState("html");
+    const [language, setLanguage] = useState(props.language || "html");
     const [theme, setTheme] = useState("light");
-    const [code, setCode] = useState<string | undefined>(DEFAULT_CODE);
+    const [code, setCode] = useState<string | undefined>(
+        props.code || DEFAULT_CODE
+    );
 
     const { execute, status } = useAction(shareAction, {
         onSuccess: (data) => {
@@ -64,7 +68,7 @@ export const Editor = (props: EditorProps) => {
 
     const handleShare = () => {
         if (code) {
-            execute({ code });
+            execute({ language, code });
         }
     };
 
@@ -72,7 +76,11 @@ export const Editor = (props: EditorProps) => {
         <div className="relative mb-10 size-full rounded-lg">
             <div className="absolute bottom-0 left-0 z-10 flex w-full items-end justify-between pb-2 pl-2 pr-5">
                 <div className="flex items-center gap-2">
-                    <Select value={language} onValueChange={setLanguage}>
+                    <Select
+                        value={language}
+                        onValueChange={setLanguage}
+                        disabled={!props.sharable}
+                    >
                         <SelectTrigger>
                             <SelectValue placeholder="language" />
                         </SelectTrigger>
@@ -108,7 +116,9 @@ export const Editor = (props: EditorProps) => {
                     size="lg"
                     className="flex items-center gap-2 rounded-full"
                     onClick={handleShare}
-                    disabled={status === "executing" ? true : false}
+                    disabled={
+                        !props.sharable || status === "executing" ? true : false
+                    }
                 >
                     {status === "executing" ? (
                         <Loader size="sm" />
