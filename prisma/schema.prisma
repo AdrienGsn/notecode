@@ -6,3 +6,8 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Share {
+  id   String @id @default(cuid())
+  code String @db.Text
+}
