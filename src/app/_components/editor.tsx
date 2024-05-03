@@ -2,6 +2,7 @@
 "use client";
 
 import { shareAction } from "@/actions/share";
+import { Share } from "@/components/share";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
 import {
@@ -69,6 +70,8 @@ export const Editor = (props: EditorProps) => {
     const handleShare = () => {
         if (code) {
             execute({ language, code });
+        } else {
+            toast.error("You must enter content!");
         }
     };
 
@@ -123,7 +126,7 @@ export const Editor = (props: EditorProps) => {
                     {status === "executing" ? (
                         <Loader size="sm" />
                     ) : (
-                        <img src="/icons/share.svg" alt="share" />
+                        <Share className="size-4" />
                     )}
                     <span>Share</span>
                 </Button>
