@@ -84,8 +84,8 @@ export const Editor = (props: EditorProps) => {
     };
 
     return (
-        <div className="relative mb-10 size-full rounded-lg">
-            <div className="absolute bottom-0 left-0 z-10 flex w-full items-end justify-between pb-2 pl-2 pr-5">
+        <div className="relative mb-10 size-full overflow-hidden rounded-lg">
+            <div className="absolute bottom-0 left-0 z-10 flex w-full flex-wrap items-end justify-between pb-2 pl-2 pr-5">
                 <div className="flex items-center gap-2">
                     <Select
                         value={language}
@@ -122,11 +122,12 @@ export const Editor = (props: EditorProps) => {
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-end gap-2">
                     {props.shared && (
                         <Button
                             variant="ghost"
-                            className="flex items-center gap-2"
+                            size="lg"
+                            className="flex items-center gap-1 rounded-full"
                             onClick={handleCopy}
                         >
                             <LinkIcon className="size-6" />
