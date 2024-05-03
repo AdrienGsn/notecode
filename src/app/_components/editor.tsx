@@ -135,9 +135,7 @@ export const Editor = (props: EditorProps) => {
                         </Button>
                     )}
                     <Button
-                        variant={
-                            props.sharable && code ? "default" : "secondary"
-                        }
+                        variant={props.sharable ? "default" : "secondary"}
                         size="lg"
                         className="flex items-center gap-2 rounded-full"
                         onClick={handleShare}
