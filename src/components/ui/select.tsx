@@ -10,7 +10,6 @@ import * as SelectPrimitive from "@radix-ui/react-select";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
-import { ChevronDown } from "../chevron-down";
 
 const Select = SelectPrimitive.Root;
 
@@ -32,7 +31,7 @@ const SelectTrigger = React.forwardRef<
     >
         {children}
         <SelectPrimitive.Icon asChild>
-            <ChevronDown className="size-4 text-muted" />
+            <ChevronDownIcon className="size-4 text-muted" />
         </SelectPrimitive.Icon>
     </SelectPrimitive.Trigger>
 ));

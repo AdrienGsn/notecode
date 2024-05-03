@@ -1,10 +1,10 @@
 "use client";
 
-export type ChevronDownProps = {
+export type ChevronDownIconProps = {
     className?: string;
 };
 
-export const ChevronDown = (props: ChevronDownProps) => {
+export const ChevronDownIcon = (props: ChevronDownIconProps) => {
     return (
         <svg
             viewBox="0 0 16 16"

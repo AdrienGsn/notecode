@@ -2,7 +2,8 @@
 "use client";
 
 import { shareAction } from "@/actions/share";
-import { Share } from "@/components/share";
+import { LinkIcon } from "@/components/link-icon";
+import { ShareIcon } from "@/components/share-icon";
 import { Button } from "@/components/ui/button";
 import { Loader } from "@/components/ui/loader";
 import {
@@ -13,7 +14,9 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { getServerUrl } from "@/lib/get-server-url";
 import { Editor as MEditor, useMonaco } from "@monaco-editor/react";
+import { Share as ShareProps } from "@prisma/client";
 import { useAction } from "next-safe-action/hooks";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -42,19 +45,24 @@ const DEFAULT_CODE = `
 
 export type EditorProps = {
     sharable?: boolean;
-    language?: string;
-    code?: string;
+    shared?: ShareProps;
 };
 
 export const Editor = (props: EditorProps) => {
     const router = useRouter();
     const monaco = useMonaco();
 
-    const [language, setLanguage] = useState(props.language || "html");
+    const [language, setLanguage] = useState(props.shared?.language || "html");
     const [theme, setTheme] = useState("light");
     const [code, setCode] = useState<string | undefined>(
-        props.code || DEFAULT_CODE
+        props.shared?.code || DEFAULT_CODE
     );
+
+    const handleCopy = () => {
+        navigator.clipboard.writeText(
+            `${getServerUrl()}/s/${props.shared?.id}`
+        );
+    };
 
     const { execute, status } = useAction(shareAction, {
         onSuccess: (data) => {
@@ -114,22 +122,38 @@ export const Editor = (props: EditorProps) => {
                         </SelectContent>
                     </Select>
                 </div>
-                <Button
-                    variant={props.sharable && code ? "default" : "secondary"}
-                    size="lg"
-                    className="flex items-center gap-2 rounded-full"
-                    onClick={handleShare}
-                    disabled={
-                        !props.sharable || status === "executing" ? true : false
-                    }
-                >
-                    {status === "executing" ? (
-                        <Loader size="sm" />
-                    ) : (
-                        <Share className="size-4" />
+                <div className="flex items-center gap-2">
+                    {props.shared && (
+                        <Button
+                            variant="ghost"
+                            className="flex items-center gap-2"
+                            onClick={handleCopy}
+                        >
+                            <LinkIcon className="size-6" />
+                            <span>.../s/{props.shared.id.slice(0, 8)}</span>
+                        </Button>
                     )}
-                    <span>Share</span>
-                </Button>
+                    <Button
+                        variant={
+                            props.sharable && code ? "default" : "secondary"
+                        }
+                        size="lg"
+                        className="flex items-center gap-2 rounded-full"
+                        onClick={handleShare}
+                        disabled={
+                            !props.sharable || status === "executing"
+                                ? true
+                                : false
+                        }
+                    >
+                        {status === "executing" ? (
+                            <Loader size="sm" />
+                        ) : (
+                            <ShareIcon className="size-4" />
+                        )}
+                        <span>Share</span>
+                    </Button>
+                </div>
             </div>
             <MEditor
                 theme={theme}

@@ -1,10 +1,10 @@
 "use client";
 
-export type ShareProps = {
+export type ShareIconProps = {
     className?: string;
 };
 
-export const Share = (props: ShareProps) => {
+export const ShareIcon = (props: ShareIconProps) => {
     return (
         <svg
             viewBox="0 0 16 16"
