@@ -2,7 +2,7 @@
 
 Solution for challenge from [devchallenges.io](https://devchallenges.io/)
 
-[Demo](https://notecode-adriengsn.vercel.app/) | [Challenge](https://devchallenges.io/challenge/code-shraing-app-note-code)
+[Demo](https://notecode-adriengsn.vercel.app/) | [Solution](https://devchallenges.io/solution/20911) | [Challenge](https://devchallenges.io/challenge/code-shraing-app-note-code)
 
 ## Table of contents
 
