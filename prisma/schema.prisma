@@ -11,4 +11,5 @@ model Share {
   id       String @id @default(cuid())
   code     String @db.Text
   language String
+  theme    String
 }

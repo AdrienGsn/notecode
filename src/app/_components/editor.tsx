@@ -53,7 +53,7 @@ export const Editor = (props: EditorProps) => {
     const monaco = useMonaco();
 
     const [language, setLanguage] = useState(props.shared?.language || "html");
-    const [theme, setTheme] = useState("light");
+    const [theme, setTheme] = useState(props.shared?.theme || "light");
     const [code, setCode] = useState<string | undefined>(
         props.shared?.code || DEFAULT_CODE
     );
@@ -77,7 +77,7 @@ export const Editor = (props: EditorProps) => {
 
     const handleShare = () => {
         if (code) {
-            execute({ language, code });
+            execute({ language, theme, code });
         } else {
             toast.error("You must enter content!");
         }

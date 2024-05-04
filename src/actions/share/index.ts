@@ -9,6 +9,7 @@ export const shareAction = action(ShareSchema, async (input) => {
     const share = await prisma.share.create({
         data: {
             language: input.language,
+            theme: input.theme,
             code: input.code,
         },
     });
