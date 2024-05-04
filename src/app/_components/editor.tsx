@@ -2,6 +2,7 @@
 "use client";
 
 import { shareAction } from "@/actions/share";
+import { updateAction } from "@/actions/update";
 import { LinkIcon } from "@/components/link-icon";
 import { ShareIcon } from "@/components/share-icon";
 import { Button } from "@/components/ui/button";
@@ -44,7 +45,6 @@ const DEFAULT_CODE = `
 `;
 
 export type EditorProps = {
-    sharable?: boolean;
     shared?: ShareProps;
 };
 
@@ -64,20 +64,44 @@ export const Editor = (props: EditorProps) => {
         );
     };
 
-    const { execute, status } = useAction(shareAction, {
-        onSuccess: (data) => {
-            toast.success("Success share code!");
+    const { execute: executeShare, status: shareStatus } = useAction(
+        shareAction,
+        {
+            onSuccess: (data) => {
+                toast.success("Success share code!");
 
-            setTimeout(() => router.push(`/s/${data.id}`), 2000);
-        },
-        onError: (error) => {
-            toast.error(error.serverError);
-        },
-    });
+                setTimeout(() => router.push(`/s/${data.id}`), 2000);
+            },
+            onError: (error) => {
+                toast.error(error.serverError);
+            },
+        }
+    );
+
+    const { execute: executeUpdate, status: updateStatus } = useAction(
+        updateAction,
+        {
+            onSuccess: (data) => {
+                toast.success("Success updated!");
+            },
+            onError: (error) => {
+                toast.error(error.serverError);
+            },
+        }
+    );
 
     const handleShare = () => {
         if (code) {
-            execute({ language, theme, code });
+            if (props.shared) {
+                executeUpdate({
+                    shareId: props.shared.id,
+                    language,
+                    theme,
+                    code,
+                });
+            } else {
+                executeShare({ language, theme, code });
+            }
         } else {
             toast.error("You must enter content!");
         }
@@ -90,7 +114,10 @@ export const Editor = (props: EditorProps) => {
                     <Select
                         value={language}
                         onValueChange={setLanguage}
-                        disabled={!props.sharable}
+                        disabled={
+                            shareStatus === "executing" ||
+                            updateStatus === "executing"
+                        }
                     >
                         <SelectTrigger>
                             <SelectValue placeholder="language" />
@@ -135,22 +162,33 @@ export const Editor = (props: EditorProps) => {
                         </Button>
                     )}
                     <Button
-                        variant={props.sharable ? "default" : "secondary"}
+                        variant={
+                            language !== props.shared?.language ||
+                            theme !== props.shared?.theme ||
+                            code !== props.shared?.code
+                                ? "default"
+                                : "secondary"
+                        }
                         size="lg"
                         className="flex items-center gap-2 rounded-full"
                         onClick={handleShare}
                         disabled={
-                            !props.sharable || status === "executing"
+                            shareStatus === "executing" ||
+                            updateStatus === "executing" ||
+                            (language === props.shared?.language &&
+                                theme === props.shared?.theme &&
+                                code === props.shared?.code)
                                 ? true
                                 : false
                         }
                     >
-                        {status === "executing" ? (
+                        {shareStatus === "executing" ||
+                        updateStatus === "executing" ? (
                             <Loader size="sm" />
                         ) : (
                             <ShareIcon className="size-4" />
                         )}
-                        <span>Share</span>
+                        <span>{props.shared ? "Save" : "Share"}</span>
                     </Button>
                 </div>
             </div>
